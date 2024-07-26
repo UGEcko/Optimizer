@@ -1,4 +1,4 @@
-import { Difficulty,RawKeyframesAny } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
+import { Bomb, Difficulty,Note,RawKeyframesAny, Wall } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
 
 type option_animations = {
     tracks?: boolean,
@@ -7,8 +7,13 @@ type option_animations = {
     bombs?: boolean
 }
 
-type keyframeDefinition = [string, RawKeyframesAny | string];
+type target = "Note" | "Wall" | "Bomb"
 
+type variant = Note[] | Wall[] | Bomb[] // No way this works lmaoooooo
+
+type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet so fucking awesome
+
+// Identifiers | Animate Track: T_ , Note: N_ , Bomb: B_ , Wall: W_ .
 
 // AnimationTracks, Vanilla Objects (Notes/Walls/Bombs)
 export class Optimize {
@@ -20,6 +25,7 @@ export class Optimize {
 
         if(this.animations) {
             const diff = this.difficulty;
+
             if(this.animations.tracks) {
                 const events = diff.customEvents;
 
@@ -58,10 +64,10 @@ export class Optimize {
                                     })
                                     if(pointExists > 0) return;
                                     if(typeof base[1] != "string") { // If it wasnt assigned a pointDef, create one.
-                                        diff.pointDefinitions[`${base[0]}_${keyframeSetIndex}`] = base[1];
-                                        existingPoints.push([`${base[0]}_${keyframeSetIndex}`,base[1]]);
-                                        baseEvent.data[base[0]] = `${base[0]}_${keyframeSetIndex}`
-                                        pairEvent.data[pair[0]] = `${base[0]}_${keyframeSetIndex}`
+                                        diff.pointDefinitions[`T_${base[0]}_${keyframeSetIndex}`] = base[1];
+                                        existingPoints.push([`T_${base[0]}_${keyframeSetIndex}`,base[1]]);
+                                        baseEvent.data[base[0]] = `T_${base[0]}_${keyframeSetIndex}`
+                                        pairEvent.data[pair[0]] = `T_${base[0]}_${keyframeSetIndex}`
                                         keyframeSetIndex++
                                     }
                                 }
@@ -71,17 +77,91 @@ export class Optimize {
                 })
             }
             if(this.animations.notes) {
-                const notes = this.difficulty.notes;
+                this.joeBiden("Note")
             }
             if(this.animations.bombs) {
-                const bombs = this.difficulty.bombs;
+                this.joeBiden("Bomb")
             }
             if(this.animations.walls) {
-                const walls = this.difficulty.walls;
+                this.joeBiden("Wall")
             }
         }
     }
 
+
+    private joeBiden(target: target) {
+        const diff = this.difficulty;
+        if(diff) {
+            let prefix: string = "NA";
+            let gObject: variant;
+            switch(target) {
+                case "Note":
+                    gObject = diff.notes;
+                    prefix = "N";
+                    break;
+                case "Bomb":
+                    gObject = diff.bombs;
+                    prefix = "B";
+                    break;
+                case "Wall":
+                    gObject = diff.walls;
+                    prefix = "W";
+                    break;
+            }
+
+            let keyframeSetIndex = 0;
+            
+            if(gObject) {
+                gObject.forEach(baseObject => {
+                    if(!baseObject.animation) return; // Dont do shit if the note doesnt have animation(s).
+                    let existingPoints: keyframeDefinition[] = [];
+                    let baseAnim: keyframeDefinition[] = [];
+                    Object.entries(diff.pointDefinitions).forEach(x=> {existingPoints.push(x)});
+                    Object.entries(baseObject.animation).forEach(x=> {
+                        if(Array.isArray(x)) {
+                            baseAnim.push([x[0],x[1] as RawKeyframesAny]);
+                        }
+                    })
+        
+                    gObject.forEach(pairObject => {
+                        if(baseObject == pairObject || !baseObject.animation) return;
+                        let pairAnim: keyframeDefinition[] = [];
+                        Object.entries(pairObject.animation).forEach(x=> {
+                            if(Array.isArray(x)) {
+                                pairAnim.push([x[0],x[1] as RawKeyframesAny]);
+                            }
+                        })
+        
+                        pairAnim.forEach(pair => {
+                            baseAnim.forEach(base => {
+                                if(checkEqual(pair[1],base[1]) && pair[0] == base[0]) {
+                                    let pointExists = 0;
+                                    existingPoints.forEach(point => {
+                                        if(checkEqual(point[1],pair[1])) {
+                                            baseObject.animation[base[0]] = point[0];
+                                            pairObject.animation[pair[0]] = point[0];
+                                            pointExists++
+                                        }
+                                    })
+                                    if(pointExists > 0) return;
+                                    if(typeof base[1] != "string") {
+                                        diff.pointDefinitions[`${prefix}_${base[0]}_${keyframeSetIndex}`] = base[1];
+                                        existingPoints.push([`${prefix}_${base[0]}_${keyframeSetIndex}`,base[1]]);
+                                        baseObject.animation[base[0]] = `${prefix}_${base[0]}_${keyframeSetIndex}`
+                                        pairObject.animation[pair[0]] = `${prefix}_${base[0]}_${keyframeSetIndex}`
+                                        keyframeSetIndex++
+                                    }
+                                }
+                            })
+                        })
+                    })
+        
+                })
+            }
+    
+            
+        }
+    }
 }
 function checkEqual(obj1: unknown, obj2: unknown): boolean { // Thanks swiffer
     if (obj1 === null || obj2 === null) return obj1 === obj2
