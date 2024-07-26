@@ -1,19 +1,20 @@
-import { Bomb, Difficulty,Note,RawKeyframesAny, Wall } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
+import { Arc, Bomb, Difficulty,Note,RawKeyframesAny, Wall } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
 
 type option_animations = {
     tracks?: boolean,
     notes?: boolean,
     walls?: boolean,
-    bombs?: boolean
+    bombs?: boolean,
+    arcs?: boolean
 }
 
-type target = "Note" | "Wall" | "Bomb"
+type target = "Note" | "Wall" | "Bomb" | "Arc"
 
-type variant = Note[] | Wall[] | Bomb[] // No way this works lmaoooooo
+type variant = Note[] | Wall[] | Bomb[] | Arc[]// No way this works lmaoooooo
 
 type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet so fucking awesome
 
-// Identifiers | Animate Track: T_ , Note: N_ , Bomb: B_ , Wall: W_ .
+// Identifiers | Animate Track: T_ , Note: N_ , Bomb: B_ , Wall: W_ , Arc: A_ . 
 
 // AnimationTracks, Vanilla Objects (Notes/Walls/Bombs)
 export class Optimize {
@@ -85,6 +86,9 @@ export class Optimize {
             if(this.animations.walls) {
                 this.joeBiden("Wall")
             }
+            if(this.animations.arcs) {
+                this.joeBiden("Arc")
+            }
         }
     }
 
@@ -107,6 +111,9 @@ export class Optimize {
                     gObject = diff.walls;
                     prefix = "W";
                     break;
+                case "Arc":
+                    gObject = diff.arcs;
+                    prefix = "A";
             }
 
             let keyframeSetIndex = 0;
@@ -158,8 +165,6 @@ export class Optimize {
         
                 })
             }
-    
-            
         }
     }
 }
