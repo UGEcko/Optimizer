@@ -39,6 +39,6 @@ Thats it! All Note, Bomb, Wall, Arc,  and Track animations will be sent to a poi
 
 ## INFO:
 
-If an existing animation is added to point definitions (example: Tracks before Arcs); And the Track animation definition uses the same animation as an Arc animation, the Arc animation will just use the Track animation instead of being strictly an Arc animation and getting duplicated.
+To clear up any confusion about a note animation using a bomb animation-based definition; this matches by animation, not type of object. So its normal to see a Note animation set to a bomb-based defintion etc...
 
 **Please report any issues to my discord: UGEcko**
