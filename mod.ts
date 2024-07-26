@@ -1,25 +1,33 @@
-import { Arc, Bomb, Difficulty,Note,RawKeyframesAny, Wall } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
+import { getBaseEnvironment } from "https://deno.land/x/remapper@3.1.2/src/general.ts";
+import { Arc, Bomb, Chain, Difficulty,Note,RawKeyframesAny, Wall } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
 
 type option_animations = {
-    tracks?: boolean,
-    notes?: boolean,
-    walls?: boolean,
-    bombs?: boolean,
+    tracks?: boolean
+    notes?: boolean
+    walls?: boolean
+    bombs?: boolean
     arcs?: boolean
+    chains?: boolean
+
+    fakeNotes?: boolean
+    fakeBombs?: boolean
+    fakeWalls?: boolean
+    fakeChains?: boolean
 }
 
-type target = "Note" | "Wall" | "Bomb" | "Arc"
+type target = "Note" | "Wall" | "Bomb" | "Arc" | "Chain" | "FakeNote" | "FakeWall" | "FakeBomb" | "FakeChain"
 
-type variant = Note[] | Wall[] | Bomb[] | Arc[]// No way this works lmaoooooo
+type variant = Note[] | Wall[] | Bomb[] | Arc[] | Chain[] // No way this works lmaoooooo
 
 type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet so fucking awesome
 
-// Identifiers | Animate Track: T_ , Note: N_ , Bomb: B_ , Wall: W_ , Arc: A_ . 
+// Identifiers | Animate Track: T_ , Note: N_ , Bomb: B_ , Wall: W_ , Arc: A_ , Chain: C_.
+// Fake Identifiers: Note: FN_ , Bomb: FB_ , Wall: FW_ , Chain: FC_ . 
 
-// AnimationTracks, Vanilla Objects (Notes/Walls/Bombs)
+// AnimationTracks, Vanilla Objects (Notes/Walls/Bombs/Arcs/Chains)
 export class Optimize {
     private difficulty?: Difficulty;
-    public animations?: option_animations = {tracks: true, bombs: true, notes: true, walls: true, arcs: true}
+    public animations?: option_animations = {tracks: true, bombs: true, notes: true, walls: true, arcs: true, fakeNotes: true, fakeBombs: true,  fakeChains: true, fakeWalls: true, chains: true}
 
     constructor(diff: Difficulty) {
         this.difficulty = diff;
@@ -80,11 +88,26 @@ export class Optimize {
             if(this.animations.notes) {
                 this.joeBiden("Note")
             }
+            if(this.animations.fakeNotes) {
+                this.joeBiden("FakeNote")
+            }
             if(this.animations.bombs) {
                 this.joeBiden("Bomb")
             }
+            if(this.animations.fakeBombs) {
+                this.joeBiden("FakeBomb")
+            }
             if(this.animations.walls) {
                 this.joeBiden("Wall")
+            }
+            if(this.animations.fakeWalls){
+                this.joeBiden('FakeWall')
+            }
+            if(this.animations.chains) {
+                this.joeBiden("Chain")
+            }
+            if(this.animations.fakeChains) {
+                this.joeBiden("FakeChain")
             }
             if(this.animations.arcs) {
                 this.joeBiden("Arc")
@@ -103,13 +126,33 @@ export class Optimize {
                     gObject = diff.notes;
                     prefix = "N";
                     break;
+                case "FakeNote":
+                    gObject = diff.fakeNotes;
+                    prefix = "FN";
+                    break;
                 case "Bomb":
                     gObject = diff.bombs;
                     prefix = "B";
                     break;
+                case "FakeBomb":
+                    gObject = diff.fakeBombs;
+                    prefix = "FB";
+                    break;
                 case "Wall":
                     gObject = diff.walls;
                     prefix = "W";
+                    break;
+                case "FakeWall":
+                    gObject = diff.fakeWalls;
+                    prefix = "FW";
+                    break;
+                case "Chain":
+                    gObject = diff.chains;
+                    prefix = "C";
+                    break;
+                case "FakeChain":
+                    gObject = diff.fakeChains;
+                    prefix = "FC";
                     break;
                 case "Arc":
                     gObject = diff.arcs;
