@@ -19,7 +19,7 @@ type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet s
 // AnimationTracks, Vanilla Objects (Notes/Walls/Bombs)
 export class Optimize {
     private difficulty?: Difficulty;
-    public animations?: option_animations = {tracks: true, bombs: true, notes: true, walls: true}
+    public animations?: option_animations = {tracks: true, bombs: true, notes: true, walls: true, arcs: true}
 
     constructor(diff: Difficulty) {
         this.difficulty = diff;
