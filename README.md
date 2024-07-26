@@ -21,7 +21,7 @@ new Optimize(map);
 ```
 
 
-There are some settings that come along with the Optimizer; you can enable or disable optimization of the following: Bombs, Notes, Walls, and Animation Tracks:
+There are some settings that come along with the Optimizer; you can enable or disable optimization of the following: Bombs, Notes, Walls, Arcs, and Animation Tracks:
 
 ```ts
 const optimizer = new Optimize(map);
@@ -33,7 +33,7 @@ optimizer.animations = {
 ```
 
 
-Thats it! All Note, Bomb, Wall, and Track animations will be sent to a point definition if there are more than 2 instances.
+Thats it! All Note, Bomb, Wall, Arc,  and Track animations will be sent to a point definition if there are more than 2 instances.
 
 
 
