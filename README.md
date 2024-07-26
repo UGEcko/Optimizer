@@ -1,50 +1,61 @@
-Im too lazy to make a decent readMe.
+# OPTIMIZER *(For Remapper)*
+Optimizer is an easy-to-use optimizer for animations on various beatmap objects.
 
 
-## OPTIMIZERRRR!
 
+## Implementation
 
-### How to use: 
+Optimizer is insanely easy to implement into any remapper map using V3;
 
-Import the Optimizer class into your script:
-
-``
+1. Import `Optimizer` into your script
+```ts
 import { Optimize } from 'https://raw.githubusercontent.com/UGEcko/Optimizer/main/mod.ts'
-``
-
-
-Next, create a new `Optimizer` class. (Before `map.save` but preferably after anything else) with your Difficulty referenced in the class:
-
+```
+2. Create an instance of `Optimizer` (Preferably after any scripting stuff but before saving the difficulty).
 ```ts
 const map = new Difficulty("NormalStandard", "ExpertStandard");
 new Optimize(map);
 ```
 
+<hr>
 
-There are some settings that come along with the Optimizer; you can enable or disable optimization of the following: Bombs, Notes, Walls, Arcs, and Animation Tracks:
+## Settings
+Currently, there is only one setting in the class, and thats to disable or enable optimization of specific beatmap objects. All V3 objects are supported:
+- Notes
+- Fake Notes
+- Bombs
+- Fake Bombs
+- Walls
+- Fake Walls
+- Chains
+- Fake Chains
+- Arcs
+- Aswell as Animation Tracks
+
+All beatmap objects *by default* are optimized. Say you dont want to add extra processing or dont want to optimize a specific beatmap object. Simply use the animations property of Optimize to determine what to leave out:
 
 ```ts
+// This disables note, bomb, and fake Chain animation optimizations.
 const optimizer = new Optimize(map);
 optimizer.animations = {
     bombs: false,
-    notes: false
+    notes: false,
+    fakeChains: false
 }
 
 // ----- OR ------
+
 new Optimize(map).animations = {
     bombs: false,
-    notes: false
+    notes: false,
+    fakeChains: false
 }
-// This disables bomb and note optimization. All objects by default are optimized.
+
 ```
 
 
-Thats it! All Note, Bomb, Wall, Arc,  and Track animations will be sent to a point definition if there are more than 2 instances.
-
-
-
 ## INFO:
+For example: If a `Note` rotation animation matches a point definition with an `Arc` prefix, the note animimation will reference the Arc definition; This is normal as seperating animations by their object type is stupid since they achieve the same thing.
 
-To clear up any confusion about a note animation using a bomb animation-based definition; this matches by animation, not type of object. So its normal to see a Note animation set to a bomb-based defintion etc...
 
-**Please report any issues to my discord: UGEcko**
+**Please report any issues to my discord: UGEcko | If you have any recommendations or additions to Optimizer please reach out!**
