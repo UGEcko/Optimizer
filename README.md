@@ -29,6 +29,12 @@ optimizer.animations = {
     bombs: false,
     notes: false
 }
+
+// ----- OR ------
+new Optimize(map).animations = {
+    bombs: false,
+    notes: false
+}
 // This disables bomb and note optimization. All objects by default are optimized.
 ```
 
