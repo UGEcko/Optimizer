@@ -17,7 +17,7 @@ Next, create a new `Optimizer` class. (Before `map.save` but preferably after an
 
 ```ts
 const map = new Difficulty("NormalStandard", "ExpertStandard");
-const optimizer = new Optimize(map);
+new Optimize(map);
 ```
 
 
@@ -39,4 +39,4 @@ Thats it! All Note, Bomb, Wall, and Track animations will be sent to a point def
 
 ## INFO:
 
-**ONLY ANIMATION TRACKS ARE OPTIMIZED AT THIS MOMENT.**
+**Please report any issues to my discord: UGEcko**
