@@ -30,7 +30,7 @@ Currently, there is only one setting in the class, and thats to disable or enabl
 - Chains
 - Fake Chains
 - Arcs
-- Aswell as Animation Tracks
+- Custom Events
 
 All beatmap objects *by default* are optimized. Say you dont want to add extra processing or dont want to optimize a specific beatmap object. Simply use the animations property of Optimize to determine what to leave out:
 
