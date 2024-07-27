@@ -1,8 +1,8 @@
-import { getBaseEnvironment } from "https://deno.land/x/remapper@3.1.2/src/general.ts";
+// deno-lint-ignore-file prefer-const
 import { Arc, Bomb, Chain, Difficulty,Note,RawKeyframesAny, Wall } from "https://deno.land/x/remapper@3.1.2/src/mod.ts"
 
 type option_animations = {
-    tracks?: boolean
+    customEvents?: boolean
     notes?: boolean
     walls?: boolean
     bombs?: boolean
@@ -21,27 +21,24 @@ type variant = Note[] | Wall[] | Bomb[] | Arc[] | Chain[] // No way this works l
 
 type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet so fucking awesome
 
-// Identifiers | Animate Track: T_ , Note: N_ , Bomb: B_ , Wall: W_ , Arc: A_ , Chain: C_.
+// Identifiers | Custom Event: E_ , Note: N_ , Bomb: B_ , Wall: W_ , Arc: A_ , Chain: C_.
 // Fake Identifiers: Note: FN_ , Bomb: FB_ , Wall: FW_ , Chain: FC_ . 
 
-// AnimationTracks, Vanilla Objects (Notes/Walls/Bombs/Arcs/Chains)
+// CustomEvents, Vanilla Objects (Notes/Walls/Bombs/Arcs/Chains)
 export class Optimize {
     private difficulty?: Difficulty;
-    public animations?: option_animations = {tracks: true, bombs: true, notes: true, walls: true, arcs: true, fakeNotes: true, fakeBombs: true,  fakeChains: true, fakeWalls: true, chains: true}
+    public animations?: option_animations = {customEvents: true, bombs: true, notes: true, walls: true, arcs: true, fakeNotes: true, fakeBombs: true,  fakeChains: true, fakeWalls: true, chains: true}
 
     constructor(diff: Difficulty) {
         this.difficulty = diff;
 
         if(this.animations) {
-            const diff = this.difficulty;
-
-            if(this.animations.tracks) {
+            if(this.animations.customEvents) {
                 const events = diff.customEvents;
 
                 let keyframeSetIndex = 0;
                 
                 events.forEach(baseEvent => {
-                    if(baseEvent.type != "AnimateTrack") return;
                     let existingPoints: keyframeDefinition[] = [];
                     let baseProperties: keyframeDefinition[] = [];
                     Object.entries(baseEvent.data).forEach(x => {
@@ -52,8 +49,6 @@ export class Optimize {
                     
                     events.forEach(pairEvent => {
                         if(baseEvent.data == pairEvent.data) return; // So pairEvent foreach doesnt process the baseEvent
-
-                        if(pairEvent.type != "AnimateTrack") return;
                         let pairProperties: keyframeDefinition[] = [];
                         Object.entries(pairEvent.data).forEach(x => {
                             if(x[0] == "track" || x[0] == "duration") return;
@@ -73,10 +68,10 @@ export class Optimize {
                                     })
                                     if(pointExists > 0) return;
                                     if(typeof base[1] != "string") { // If it wasnt assigned a pointDef, create one.
-                                        diff.pointDefinitions[`T_${base[0]}_${keyframeSetIndex}`] = base[1];
-                                        existingPoints.push([`T_${base[0]}_${keyframeSetIndex}`,base[1]]);
-                                        baseEvent.data[base[0]] = `T_${base[0]}_${keyframeSetIndex}`
-                                        pairEvent.data[pair[0]] = `T_${base[0]}_${keyframeSetIndex}`
+                                        diff.pointDefinitions[`E_${base[0]}_${keyframeSetIndex}`] = base[1];
+                                        existingPoints.push([`E_${base[0]}_${keyframeSetIndex}`,base[1]]);
+                                        baseEvent.data[base[0]] = `E_${base[0]}_${keyframeSetIndex}`
+                                        pairEvent.data[pair[0]] = `E_${base[0]}_${keyframeSetIndex}`
                                         keyframeSetIndex++
                                     }
                                 }
@@ -157,6 +152,7 @@ export class Optimize {
                 case "Arc":
                     gObject = diff.arcs;
                     prefix = "A";
+                    break;
             }
 
             let keyframeSetIndex = 0;
@@ -211,6 +207,7 @@ export class Optimize {
         }
     }
 }
+
 function checkEqual(obj1: unknown, obj2: unknown): boolean { // Thanks swiffer
     if (obj1 === null || obj2 === null) return obj1 === obj2
     if (typeof obj1 !== typeof obj2) return false
