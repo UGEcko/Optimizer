@@ -1,4 +1,4 @@
-# OPTIMIZER *(For Remapper)*
+# OPTIMIZER *(RM and JS supported)*
 Optimizer is an easy-to-use optimizer for animations on various beatmap objects.
 
 
