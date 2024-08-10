@@ -17,9 +17,9 @@ type option_animations = {
 
 type target = "Note" | "Wall" | "Bomb" | "Arc" | "Chain" | "FakeNote" | "FakeWall" | "FakeBomb" | "FakeChain"
 
-type variant = Note[] | Wall[] | Bomb[] | Arc[] | Chain[] // No way this works lmaoooooo
+type variant = Note[] | Wall[] | Bomb[] | Arc[] | Chain[]
 
-type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet so fucking awesome
+type keyframeDefinition = [string, RawKeyframesAny | string]
 
 // Identifiers | Custom Event: E_ , Note: N_ , Bomb: B_ , Wall: W_ , Arc: A_ , Chain: C_.
 // Fake Identifiers: Note: FN_ , Bomb: FB_ , Wall: FW_ , Chain: FC_ . 
@@ -27,9 +27,12 @@ type keyframeDefinition = [string, RawKeyframesAny | string]; // So simple yet s
 // CustomEvents, Vanilla Objects (Notes/Walls/Bombs/Arcs/Chains)
 export class Optimize {
     private difficulty?: Difficulty;
-    public animations?: option_animations = {customEvents: true, bombs: true, notes: true, walls: true, arcs: true, fakeNotes: true, fakeBombs: true,  fakeChains: true, fakeWalls: true, chains: true}
+    private animations?: option_animations = {customEvents: true, bombs: true, notes: true, walls: true, arcs: true, fakeNotes: true, fakeBombs: true,  fakeChains: true, fakeWalls: true, chains: true}
 
-    constructor(diff: Difficulty) {
+    constructor(diff: Difficulty, settings?: option_animations) {
+        if(settings) {
+            this.animations = settings;
+        }
         this.difficulty = diff;
 
         if(this.animations) {
