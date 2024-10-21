@@ -1,4 +1,5 @@
 // -- OPTIMIZER --
+// NOTICE: THIS SCRIPT WAS MADE USING MAWNTEES 2024 SCRIPT. PLEASE ENSURE THE DIFFICULTY PARAMETER IS FILLED, AND THAT THE OBJECTS INSIDE OF THE JOEBIDEN FUNCTION ACTUALLY POINT TO THOSE BEATMAP OBJECTS.
 function beatmap_optimize(difficulty) { // Optimize all animations from all beatmap objects and animateTracks.
   if(difficulty)
   {
